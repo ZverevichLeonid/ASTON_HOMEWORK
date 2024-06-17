@@ -1,33 +1,31 @@
-//1.
-// const a = {b: 1},
-//     c = Object.create(a);
-//
-// console.log(c.b); // ?
+1;
+const a = { b: 1 },
+  c = Object.create(a);
+
+// console.log(c.b); // ? 1
 // delete c.b;
-// console.log(c.b); // ?
+// console.log(c.b); // ? 1
 // delete a.b;
-// console.log(c.b); // ?
+// console.log(c.b); // ? undefined
 // a.z = 2;
-// console.log(c.z); // ?
+// console.log(c.z); // ? 2
 // c.z = 3;
-// console.log(a.z); // ?
+// console.log(a.z); // ? 2
 
 // 2.
 
-// const promise = new Promise(() => {
-// })
-// promise.prototype === Promise.__proto__ // ?
-//
-// const obj = {}
-// obj.__proto__ === Object.prototype // ?
-//
-// new Array([]).__proto__ === Array.prototype // ?
-//
-// function Fn1 () {}
-// function Fn2 () {}
-// Fn1.constructor === Fn2.constructor // ?
-//
-// Fn1.prototype === Fn2.prototype // ?
+const promise = new Promise(() => {});
+promise.prototype === Promise.__proto__; // false
+
+const obj = {};
+obj.__proto__ === Object.prototype; // true
+
+new Array([]).__proto__ === Array.prototype; // true
+
+function Fn1() {}
+function Fn2() {}
+Fn1.constructor === Fn2.constructor; // true
+Fn1.prototype === Fn2.prototype; // false
 //3.
 
 // У вас есть два конструктора, Animal и Bird.
@@ -40,13 +38,26 @@
 // Добавьте метод fly в Bird, который выводит в консоль сообщение о том, что птица летит (например, "Flying high!").
 // Создайте объекты animal и bird с использованием соответствующих конструкторов и вызовите их методы speak и fly.
 // Решите задачу, используя прототипное наследование, чтобы Bird наследовал от Animal.
+function Animal(name) {
+  this.name = name;
+}
 
-// Должно быть такое поведение:
-// const animal = new Animal("Дженни");
-// const bird = new Bird("Воробей");
-//
-// animal.speak(); // "Some generic sound"
-// bird.speak();   // "Some generic sound"
-// bird.fly();     // "Flying high!"
+Animal.prototype.speak = function () {
+  console.log(`Some generic sound`);
+};
 
+function Bird(name) {
+  Animal.call(this, name);
+}
 
+Bird.prototype = Object.create(Animal.prototype);
+Bird.prototype.constructor = Bird;
+
+Bird.prototype.fly = function () {
+  console.log(`Flying high!`);
+};
+const animal = new Animal("Дженни");
+const bird = new Bird("Воробей");
+animal.speak(); // "Some generic sound"
+bird.speak(); // "Some generic sound"
+bird.fly(); // "Flying high!"
